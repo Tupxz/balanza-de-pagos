@@ -1,0 +1,48 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+env/
+venv/
+.venv/
+ENV/
+.ipynb_checkpoints/
+*.log
+
+# === Jupyter ===
+.jupyter/
+
+# === Excel ===
+~$*.xls*
+*.xlsx#
+*.xlsm#
+*.tmp
+
+# === Word ===
+~$*.doc*
+*.docx#
+*.wbk
+
+# === Office temp/lock files (general) ===
+~$*
+*.lock
+
+# === Sistema operativo ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === Editor / IDE ===
+.vscode/
+.idea/
+*.swp
+
+# === Otros ===
+*.bak
+*.orig
