@@ -1,0 +1,10 @@
+NIIP Brazil:
+
+https://www3.bcb.gov.br/sgspub/localizarseries/localizarSeries.do?method=prepararTelaLocalizarSeries
+
+CA/GDP, FDI/GDP, 
+
+https://data.worldbank.org/indicator/BX.KLT.DINV.WD.GD.ZS?
+
+https://data.worldbank.org/indicator/BN.CAB.XOKA.GD.ZS?
+
