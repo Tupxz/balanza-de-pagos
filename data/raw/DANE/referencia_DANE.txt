@@ -1,0 +1,8 @@
+* PIB : PIB nominal desdestacionalizado cuadro 3
+
+https://www.dane.gov.co/index.php/estadisticas-por-tema/cuentas-nacionales/cuentas-nacionales-trimestrales/pib-informacion-tecnica
+
+* anex-EXPORTACIONES-jul2026, anex-EXPORTACIONES-SerieCafeCarbonPetroleoNotradicionales-jul2026, anex-EXPORTACIONES-SerieHistorica1970-jul2026, anex-EXPORTACIONES-SerieSegunCapitulosArancel-jul2026, anex-EXPORTACIONES-SerieTotalesCIIUR4-jul2026 :
+Exportaciones
+
+https://www.dane.gov.co/index.php/estadisticas-por-tema/comercio-internacional/exportaciones

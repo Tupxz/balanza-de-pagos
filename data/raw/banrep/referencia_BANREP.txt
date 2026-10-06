@@ -1,0 +1,19 @@
+* 1_Balanza_de_pagos_Resumen : Balanza de pagos resumen
+
+https://suameca.banrep.gov.co/estadisticas-economicas-back/reporte-dv.html?path=balanza_de_pagos_resumen
+
+* 2_Balanza_de_pagos_Maximo_nivel_de_detalle : Balanza de pagos máximo nivel de detalle
+
+https://suameca.banrep.gov.co/estadisticas-economicas-back/reporte-dv.html?path=balanza_de_pagos_maximo_nivel_de_detalle
+
+* CA_PIB : Cuenta corriente como porcentaje del PIB
+
+https://suameca.banrep.gov.co/graficador-interactivo/grafica/15290
+
+* CF : Cuenta financiera con estacionalidad
+
+https://suameca.banrep.gov.co/graficador-interactivo/grafica/16142
+
+* 5_Serie_historica_TRM_mensual_promedio_fin : Tasa de cambio mensual
+
+https://suameca.banrep.gov.co/estadisticas-economicas-back/reporte-dv.html?path=trm_mensual_promedio_fin
