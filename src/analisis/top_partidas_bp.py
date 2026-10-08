@@ -8,16 +8,16 @@ Para cada cuenta y cada lado
 se calculan, sobre las partidas de máximo detalle (ver src/build/bp_banrep_detalle.py):
 
   participación (%)       = x_t / X_t * 100
-  participación abs. (%)  = |x_t| / sum|x_t| * 100   (útil cuando hay signos mixtos)
+  peso bruto (%)          = |x_t| / sum|x_t| * 100   (útil cuando hay signos mixtos)
   crecimiento (%)         = (x_t - x_b) / |x_b| * 100
   contribución (p.p.)     = (x_t - x_b) / |X_b| * 100  -> suman el crecimiento de X
 
 donde t es el periodo analizado, b el periodo base y X el total del lado.
 
 Rankings
-  1. Top participación  : mayor participación absoluta en t (+ su crecimiento).
-  2. Top crecimiento    : mayor crecimiento entre partidas con participación
-                          absoluta >= --umbral (% en t o en b) (+ su participación).
+  1. Top participación  : mayor peso bruto en t (+ crecimiento y contribución).
+  2. Top crecimiento    : mayor crecimiento entre partidas con peso bruto
+                          >= --umbral (% en t o en b) (+ participación y contribución).
   3. Top contribución   : mayor |contribución| (+ participación y crecimiento).
 
 Uso
@@ -129,13 +129,15 @@ def rankings(m: pd.DataFrame, top: int, umbral: float) -> dict[str, pd.DataFrame
 
 
 COLS = {
-    "participacion": ["participacion_t", "part_abs_t", "crecimiento", "valor_t", "valor_b", "var_abs"],
-    "crecimiento": ["crecimiento", "participacion_t", "part_abs_t", "valor_t", "valor_b", "var_abs"],
+    "participacion": ["participacion_t", "part_abs_t", "crecimiento", "contribucion_pp",
+                      "valor_t", "valor_b", "var_abs"],
+    "crecimiento": ["crecimiento", "participacion_t", "part_abs_t", "contribucion_pp",
+                    "valor_t", "valor_b", "var_abs"],
     "contribucion": ["contribucion_pp", "participacion_t", "crecimiento", "valor_t", "valor_b", "var_abs"],
 }
 TITULOS = {
     "participacion": "Top {n} por participación en la cuenta",
-    "crecimiento": "Top {n} por crecimiento (partidas con participación abs. ≥ {u}%)",
+    "crecimiento": "Top {n} por crecimiento (partidas con peso bruto ≥ {u}%)",
     "contribucion": "Top {n} por contribución al crecimiento de la cuenta",
 }
 
@@ -145,7 +147,7 @@ def encabezados(t: str, b: str) -> dict[str, str]:
         "etiqueta": "Partida", "codigo": "Código BanRep",
         "valor_t": f"Valor {t} (USD mill.)", "valor_b": f"Valor {b} (USD mill.)",
         "var_abs": "Variación (USD mill.)", "participacion_t": f"Participación {t} (%)",
-        "part_abs_t": f"Participación abs. {t} (%)", "crecimiento": "Crecimiento (%)",
+        "part_abs_t": f"Peso bruto {t} (%)", "crecimiento": "Crecimiento (%)",
         "contribucion_pp": "Contribución (p.p.)",
     }
 
@@ -188,7 +190,7 @@ def escribir_excel(ruta: Path, bloques: list[dict], detalle: pd.DataFrame, contr
             ws.column_dimensions["A"].width = 4
             ws.column_dimensions["B"].width = 85
             ws.column_dimensions["C"].width = 14
-            for c in range(4, 10):
+            for c in range(4, 11):
                 ws.column_dimensions[get_column_letter(c)].width = 16
 
         detalle.to_excel(xw, sheet_name="Detalle_hojas", index=False)
@@ -212,7 +214,7 @@ def main(argv: list[str] | None = None) -> Path:
                     help="anual = mismo periodo del año anterior (defecto); anterior = periodo inmediatamente anterior")
     ap.add_argument("--top", type=int, default=5)
     ap.add_argument("--umbral", type=float, default=1.0,
-                    help="Participación abs. mínima (%%) para entrar al ranking de crecimiento (defecto 1)")
+                    help="Peso bruto mínimo (%%) para entrar al ranking de crecimiento (defecto 1)")
     args = ap.parse_args(argv)
 
     df = bp.leer_raw()
@@ -283,11 +285,16 @@ def main(argv: list[str] | None = None) -> Path:
         "informativas, autoridades monetarias según corresponda) y desgloses duplicados.",
         "Cuenta corriente: neto = crédito − débito. Cuenta financiera: neto = activos − pasivos "
         "(en el neto los pasivos entran con signo negativo).",
-        "Participación (%) = x_t / X_t. Con signos mixtos puede ser negativa o superar 100%; por eso "
-        "el ranking de participación ordena por participación absoluta |x_t| / Σ|x_t|.",
+        "Participación (%) = x_t / X_t: peso de la partida sobre el SALDO NETO de la cuenta. Si hay "
+        "partidas de signo contrario que se compensan, el neto es pequeño y la participación puede ser "
+        "negativa o superar 100% (las participaciones suman 100%, pero mezclando positivos y negativos).",
+        "Peso bruto (%) = |x_t| / Σ|x_t|: tamaño de la partida sobre la suma de los valores absolutos "
+        "de todas las partidas (siempre entre 0 y 100%, suman 100%). El ranking de participación se "
+        "ordena por esta medida. Peso bruto = |participación| × |X_t| / Σ|x_t|, así que la razón entre "
+        "ambas es la misma para todas las partidas de una tabla.",
         "Crecimiento (%) = (x_t − x_b) / |x_b|. Con saldos negativos, crecimiento positivo = "
         "el saldo sube (p. ej. menor déficit / menor salida neta).",
-        f"Ranking de crecimiento: solo partidas con participación absoluta ≥ {args.umbral}% en t o en b, "
+        f"Ranking de crecimiento: solo partidas con peso bruto ≥ {args.umbral}% en t o en b, "
         "para evitar crecimientos enormes de partidas con base casi nula.",
         "Contribución (p.p.) = (x_t − x_b) / |X_b|; la suma de contribuciones es el crecimiento del total. "
         "Ranking por valor absoluto (el signo indica si empuja hacia arriba o hacia abajo).",
